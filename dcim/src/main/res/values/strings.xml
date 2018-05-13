@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">dcim</string>
+    <string name="dcim">相册</string>
+    <string name="permission_deny">为获取到权限，无法正常使用</string>
+</resources>
