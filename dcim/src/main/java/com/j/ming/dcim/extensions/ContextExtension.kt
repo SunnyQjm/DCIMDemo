@@ -7,6 +7,7 @@ import android.support.annotation.StringRes
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.j.ming.dcim.model.params.IntentParam
 
 fun Context.toast(info: String, duration: Int = Toast.LENGTH_SHORT) {
     Toast.makeText(this, info, duration)
@@ -19,15 +20,20 @@ fun Context.toast(@StringRes stringRes: Int, duration: Int = Toast.LENGTH_SHORT)
 }
 
 
-fun <T : Any> Context.jumpTo(clazz: Class<T>) {
-    startActivity(Intent(this, clazz))
+fun Context.jumpTo(cls: Class<*>, intentParam: IntentParam? = null, vararg flags: Int) {
+    val intent = Intent(this, cls)
+    flags.forEach {
+        intent.addFlags(it)
+    }
+    intentParam?.applyParam(intent)
+    startActivity(intent)
 }
 
-fun <T : Any> Activity.jumpForResult(clazz: Class<T>, requestCode: Int = 0) {
-    startActivityForResult(Intent(this, clazz), requestCode)
+fun Activity.jumpForResult(cls: Class<*>, requestCode: Int = 0, intentParam: IntentParam? = null) {
+    val intent = Intent(this, cls)
+    intentParam?.applyParam(intent)
+    startActivityForResult(intent, requestCode)
 }
-
-
 /////////////////////////////////////////////////////////
 ///////// 下面是软键盘相关的扩展
 ////////////////////////////////////////////////////////

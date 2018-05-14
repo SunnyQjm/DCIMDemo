@@ -4,21 +4,24 @@ package com.j.ming.dcimdemo
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.j.ming.dcim.extensions.jumpForResult
-import com.j.ming.dcim.extensions.load
 import com.j.ming.dcim.index.DCIMActivity
-import com.j.ming.dcim.extensions.jumpTo
-import com.j.ming.dcimdemo.R.id.imageView
+import com.j.ming.dcim.manager.EasyDCIM
+import com.j.ming.dcim.model.params.EasyBarParams
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        imageView.load("http://img4.imgtn.bdimg.com/it/u=3639748931,2936958645&fm=27&gp=0.jpg")
-        imageView.setOnClickListener {
-            jumpForResult(DCIMActivity::class.java)
+        btnSelect.setOnClickListener {
+            EasyDCIM.with(this)
+                    .setMode(EasyDCIM.MODE_SELECT_SINGLE)
+                    .setSaveState(false)
+                    .setEasyBarParam(EasyBarParams(titleRes = R.string.title, barBgColor = R.color.colorAccent,
+                            rightRes = R.drawable.cat))
+                    .jumpForResult(0)
         }
     }
 
@@ -27,9 +30,7 @@ class MainActivity : AppCompatActivity() {
         when(requestCode){
             0 -> {
                 data?.getStringArrayExtra(DCIMActivity.RESULT_PATHS)?.let {
-                    it.forEach {
-                        println(it)
-                    }
+                    result.text = Arrays.toString(it)
                 }
             }
         }

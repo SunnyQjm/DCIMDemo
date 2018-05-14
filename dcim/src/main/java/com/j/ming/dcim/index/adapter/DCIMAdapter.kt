@@ -8,13 +8,14 @@ import com.j.ming.dcim.extensions.load
 import com.j.ming.dcim.manager.SelectPictureManager
 import com.j.ming.dcim.model.FileItem
 
-class DCIMAdapter(mList: List<FileItem>) :
+class DCIMAdapter(mList: List<FileItem>, var showMultiSelect: Boolean = true) :
         BaseQuickAdapter<FileItem, BaseViewHolder>(R.layout.dcim_item2, mList) {
 
     override fun convert(helper: BaseViewHolder?, item: FileItem?) {
         helper?.let { holder ->
             item?.let { fileItem ->
-                holder.getView<ImageView>(R.id.img_picture)
+                holder.setVisible(R.id.imgSelect, showMultiSelect)
+                        .getView<ImageView>(R.id.img_picture)
                         .load(fileItem.path)
                 if (SelectPictureManager.check(fileItem)){
                     holder.setImageResource(R.id.imgSelect, R.drawable.icon_selected)

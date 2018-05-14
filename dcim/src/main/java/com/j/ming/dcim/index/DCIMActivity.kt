@@ -20,7 +20,12 @@ import com.j.ming.easybar2.EasyBar
 import com.j.ming.easybar2.init
 import kotlinx.android.synthetic.main.activity_dcim.*
 import com.j.ming.dcim.extensions.toast
+import com.j.ming.dcim.model.event.DCIMIntentEvent
+import com.j.ming.easybar2.EasyBarParams
 import kotlinx.android.synthetic.main.dir_select_bottom.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import org.greenrobot.eventbus.EventBus
 
 
 class DCIMActivity : MVPBaseActivity<DCIMActivityPresenter>(), DCIMActivityContract.View {
@@ -39,6 +44,16 @@ class DCIMActivity : MVPBaseActivity<DCIMActivityPresenter>(), DCIMActivityContr
         displayProgressCircle(false)
         dcimAdapter.notifyDataSetChanged()
         selectAdapter.notifyDataSetChanged()
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onCretePresenter(): DCIMActivityPresenter =
@@ -81,11 +96,33 @@ class DCIMActivity : MVPBaseActivity<DCIMActivityPresenter>(), DCIMActivityContr
         dcimAdapter.bindToRecyclerView(recyclerView)
         dcimAdapter.setOnItemClickListener { adapter, view, position ->
             adapter as DCIMAdapter
-            adapter.getItem(position)?.let {
-                SelectPictureManager.toggle(it)
-                adapter.notifyItemChanged(position)
+            adapter.getItem(position)?.let { item->
+                when(mode){
+                    MODE_SELECT_SINGLE -> {     //单选模式，则选中就返回
+                        Intent().let {
+                            it.putExtra(RESULT_PATHS, arrayOf(item.path))
+                            setResult(0, it)
+                            onBackPressed()
+                        }
+                    }
+                    MODE_SELECT_MULTI -> {      //多选模式，则切换点中item的选中状态
+                        SelectPictureManager.toggle(item)
+                        adapter.notifyItemChanged(position)
+                    }
+                }
             }
         }
+        when(mode){
+            MODE_SELECT_MULTI -> {
+                dcimAdapter.showMultiSelect = true
+            }
+            MODE_SELECT_SINGLE -> {
+                dcimAdapter.showMultiSelect = false
+                saveState = false
+            }
+        }
+
+
         selectAdapter = SelectDirAdapter(this, mPresenter.getSelectItems())
         dropMenu = DropUpMenu(this, selectAdapter, { selctedItem, position ->
             mPresenter.selected(position = position)
@@ -125,11 +162,14 @@ class DCIMActivity : MVPBaseActivity<DCIMActivityPresenter>(), DCIMActivityContr
     }
 
     override fun onBackPressed() {
-        if(!saveState)
+        if (!saveState)
             SelectPictureManager.clear()
         super.onBackPressed()
     }
 
+    /**
+     * 获取权限回调
+     */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
@@ -145,10 +185,25 @@ class DCIMActivity : MVPBaseActivity<DCIMActivityPresenter>(), DCIMActivityContr
         }
     }
 
+    /**
+     * 是否显示菊花
+     */
     private fun displayProgressCircle(display: Boolean) {
         if (display)
             progressCircle.visibility = View.VISIBLE
         else
             progressCircle.visibility = View.INVISIBLE
+    }
+
+    /**
+     * 接收EasyBar外观参数
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onMessageEvent(dcimIntentEvent: DCIMIntentEvent) {
+        easyBar.init(EasyBar.Mode.ICON, dcimIntentEvent.easyBarParams.title,
+                leftRes = dcimIntentEvent.easyBarParams.leftRes, rightRes = dcimIntentEvent.easyBarParams.rightRes,
+                leftText = dcimIntentEvent.easyBarParams.leftText, rightText = dcimIntentEvent.easyBarParams.rightText,
+                titleRes = dcimIntentEvent.easyBarParams.titleRes, isCoverCallback = false)
+        easyBar.setBackgroundResource(dcimIntentEvent.easyBarParams.barBgColor)
     }
 }
