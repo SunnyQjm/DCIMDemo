@@ -15,9 +15,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        btnSelect.setOnClickListener {
+        btnSelectSingle.setOnClickListener {
             EasyDCIM.with(this)
                     .setMode(EasyDCIM.MODE_SELECT_SINGLE)
+                    .setSaveState(false)
+                    .setEasyBarParam(EasyBarParams(titleRes = R.string.title, barBgColor = R.color.colorAccent,
+                            rightRes = R.drawable.cat))
+                    .jumpForResult(0)
+        }
+        btnSelectMulti.setOnClickListener {
+            EasyDCIM.with(this)
+                    .setMode(EasyDCIM.MODE_SELECT_MULTI)
                     .setSaveState(false)
                     .setEasyBarParam(EasyBarParams(titleRes = R.string.title, barBgColor = R.color.colorAccent,
                             rightRes = R.drawable.cat))
