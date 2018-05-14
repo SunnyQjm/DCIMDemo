@@ -6,12 +6,15 @@
 - ### 单选
 
  <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/single_select.jpg?raw=true" width=256 style={display: inline-block}/>
+
 - ### 多选
 
  <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/multi_select.jpg?raw=true" width=256 style={display: inline-block}/>
+
 - ### 切换相册集
 
  <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/select_item.jpg?raw=true" width=256 style={display: inline-block}/>
+
 ## 使用方式
 - ### 首先，添加依赖
 Step 1. Add the JitPack repository to your build file
