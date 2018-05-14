@@ -26,7 +26,7 @@ allprojects {
 Step 2. Add the dependency
 ```groovy
 dependencies {
-  implementation 'com.github.User:Repo:Tag'
+  implementation 'com.github.SunnyQjm:DCIMDemo:v1.1.0'
 }
 
 ```
