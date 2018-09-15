@@ -5,15 +5,15 @@
 ## 效果图
 - ### 单选
 
- <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/single_select.jpg?raw=true" width=256 style={display: inline-block}/>
+![](https://github.com/SunnyQjm/DCIMDemo/blob/master/single_select.jpg?raw=true)
 
 - ### 多选
 
- <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/multi_select.jpg?raw=true" width=256 style={display: inline-block}/>
+![](https://github.com/SunnyQjm/DCIMDemo/blob/master/multi_select.jpg?raw=true)
 
 - ### 切换相册集
 
- <img src="https://github.com/SunnyQjm/DCIMDemo/blob/master/select_item.jpg?raw=true" width=256 style={display: inline-block}/>
+![](https://github.com/SunnyQjm/DCIMDemo/blob/master/select_item.jpg?raw=true)
 
 ## 使用方式
 - ### 首先，添加依赖
